@@ -10,7 +10,6 @@ const fibs = function* () {
 };
 
 const evensOnly = function* () {
-    let f;
     for (let fib of fibs())
         if (fib%2 === 0)
             yield fib;
