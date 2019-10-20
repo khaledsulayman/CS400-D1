@@ -1,20 +1,15 @@
 const funk = (s, func) => func(s);
 
 const cBreak = s => {
-    const rex = /c/g;
-    s = s.replace(rex, 'PERRYc')
+    const regExp = /c/g;
+    s = s.replace(regExp, 'PERRYc')
     return s.split('PERRY');
 };
 
 const bigA = s => {
-    let count = 0;
-    let newStr = s;
-    for (let i = 0 ; i < s.length ; i++) {
-        if (s.charAt(i) === 'a') {
-            newStr = newStr.substring(0, i) + 'A' + newStr.substring(i + 1);
-            count++;
-        }
-    }
+    const regExp = /a/g;
+    let count = s.match(regExp).length;
+    let newStr = s.replace(regExp, 'A');
     return {
         originalString: s,
         modifiedString: newStr,
