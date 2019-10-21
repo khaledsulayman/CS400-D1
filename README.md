@@ -14,7 +14,7 @@ Write a function that takes as input each of the following strings in turn:
 This function should
 Determine the operator (+, *, -, or /) embedded in the string
 Return a function to implement the input operator that returns the result
-For example, if the input string is ‘8%3’, return (left, right) => left % right
+For example, if the input string is ‘8%3’, return (left, right) => left % right  
 Execute the returned function to evaluate and print each expression. For example,  
 const expression = '8%3';  
 let operator = evaluate(expression);  
