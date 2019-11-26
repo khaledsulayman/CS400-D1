@@ -6,7 +6,7 @@ const router = require('express').Router();
  */
 
 router.get('/', function(req, res) {
-    res.render('ps4', {title: req.user.displayName})
+    res.render('ps6', {title: req.user.displayName})
 });
 
 module.exports = router;
