@@ -9,7 +9,7 @@ const createError = require('http-errors'),
     logger = require('morgan');
 
 const indexRouter = require('./routes/index'),
-    ps6Router = require('./routes/ps6');
+    ps4Router = require('./routes/ps4');
 
 passport.serializeUser(function(user, done) {
   done(null, user);
@@ -50,7 +50,7 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', indexRouter);
-app.use('/ps6', ps6Router);
+app.use('/ps4', ps4Router);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
