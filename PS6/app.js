@@ -9,7 +9,7 @@ const createError = require('http-errors'),
     logger = require('morgan');
 
 const indexRouter = require('./routes/index'),
-    ps4Router = require('./routes/ps4');
+    userRouter = require('./routes/user');
 
 passport.serializeUser(function(user, done) {
   done(null, user);
@@ -26,9 +26,9 @@ passport.use(
           callbackURL: spotify.REDIR_URI
         },
         function(accessToken, refreshToken, expires_in, profile, done) {
-          console.log('lolE')
-          process.nextTick(() => done(null, profile));
-
+            spotify.ACCESS_TOKEN = accessToken;
+            spotify.REFRESH_TOKEN = refreshToken;
+            process.nextTick(() => done(null, profile));
         }
     )
 );
@@ -50,7 +50,7 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', indexRouter);
-app.use('/ps4', ps4Router);
+app.use('/in', userRouter);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
