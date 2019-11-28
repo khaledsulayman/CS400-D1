@@ -26,8 +26,9 @@ passport.use(
           callbackURL: spotify.REDIR_URI
         },
         function(accessToken, refreshToken, expires_in, profile, done) {
-          console.log('lolE')
-          process.nextTick(() => done(null, profile));
+            spotify.ACCESS_TOKEN = accessToken;
+            spotify.REFRESH_TOKEN = refreshToken;
+            process.nextTick(() => done(null, profile));
 
         }
     )
