@@ -1,0 +1,10 @@
+extends layout
+
+block content
+    h1 If you're a fan of #{artist.name},
+    p You might want to check out artists like:
+    ul
+        each art in artist.related
+            li= art.name
+
+    p #{artist.fromDB}
