@@ -4,15 +4,26 @@ const router = require('express').Router(),
     db = require('../mongo/mongo');
 
 /**
- * Logged in users end up here with the app accessing and
- * displaying their spotify username.
+ * Users accessing the root url will end up on '/in',
+ * having been logged into the app via Spotify. Then,
+ * the app will ask for the input of a search query via
+ * url params. The app sends this to the spotify API
+ * and obtains the artist ID, which it then uses to
+ * access a list of related artists (curated by Spotify),
+ * and render the artist name and list of related artists.
+ *
+ * In order to reduce the time taken on all of the API
+ * calls, the app implements a cache-like instance of
+ * MongoDB, so that every time an artist or their related
+ * artists are fetched successively, the result will be
+ * returned immediately from the database instead of
+ * repeating the same API calls again.
  */
 
 
-/**
- * Spent most of this assignment doing some routing gymnastics
- * to try and build some familiarity using promises.
- */
+// Side note: I spent most of this assignment doing some
+// routing gymnastics to try and build familiarity using
+// promises.
 
 
 router.get('/', function(req, res) {
@@ -27,35 +38,19 @@ router.get('/:query', function(req, res) {
         url: 'https://api.spotify.com/v1/search?type=artist&q=' + req.params.query,
         qs: { limit: '1', market: 'from_token' },
         json: true,
-        headers:
-            {
-                //    'cache-control': 'no-cache',
-                //     Connection: 'keep-alive',
-                //     'Accept-Encoding': 'gzip, deflate',
-                //     Host: 'api.spotify.com',
-                //     'Postman-Token': '7f5293ef-6894-460b-9886-43214ff8e452,237fb2f5-b094-4301-a506-98c3764079f6',
-                //     'Cache-Control': 'no-cache',
-                //     Accept: '*/*',
-                //     'User-Agent': 'PostmanRuntime/7.18.0',
-                Authorization: 'Bearer ' + spotify.ACCESS_TOKEN
-            }
+        headers: {
+            Authorization: 'Bearer ' + spotify.ACCESS_TOKEN
+        }
     };
 
     rp(options)
         .then(body => new Promise((resolve, reject) => {
-        // if (error) throw new Error(error);
-
-        // const obj = JSON.parse(body);
-        // console.log(obj);
-        // artist = obj.items[0].name || 'not a valid artist';
-
             if (body.artists.items[0]) {
                 resolve({
                     name: body.artists.items[0].name,
                     id: body.artists.items[0].id,
                     related: []
                 });
-                // console.log(body.artists.items[0])
             }
             else {
                 reject('artist not found');
@@ -65,16 +60,6 @@ router.get('/:query', function(req, res) {
         }))
 
         .then((artist) => {
-        // try {
-        //     artist = {
-        //         name: body.artists.items[0].name,
-        //         id: body.artists.items[0].id,
-        //         related: []
-        //     };
-        //     console.log(artist)
-        // } catch(error) {
-        //     res.send('ERROR: artist not found.')
-        // }
             let mongo = db.getDB();
             mongo.collection('artists').findOne({ id: artist.id })
                 .then(record => new Promise(resolve => {
@@ -87,7 +72,7 @@ router.get('/:query', function(req, res) {
                             related: []
                         };
                         mongo.collection('artists').insertOne(record).then(() => {
-                            console.log(`cached artist ${record.name}`)
+                            console.log(`cached new artist: ${record.name}`)
                         });
                         resolve(record)
                     }
@@ -126,7 +111,6 @@ router.get('/related/:id', function (req, res) {
         .then(artist => {
             // console.log(artist);
             if (artist.related.length) {
-                // console.log('les related artists sont:');
                 // console.log(artist.related);
                 // console.log(typeof(artist.related));
                 res.send({
@@ -178,7 +162,6 @@ router.get('/related/:id', function (req, res) {
                         };
                         rp(options)
                             .then(cached => {
-                                // console.log(body + 'BOOGLIE BOO\n' + 'DIDDLY DUM DEE\n')
                                 res.send({
                                     id: artist.id,
                                     name: artist.name,
