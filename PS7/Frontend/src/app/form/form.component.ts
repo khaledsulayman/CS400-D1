@@ -18,6 +18,6 @@ export class FormComponent implements OnInit {
   }
 
   valid8or() {
-    return this.query.length >= 2;
+    return (this.query && this.query.length >= 2);
   }
 }
