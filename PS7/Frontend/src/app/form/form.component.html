@@ -1,0 +1,7 @@
+<form (ngSubmit)="onSubmit()">
+
+  <label>Search for an artist:</label>
+  <input type="text" [(ngModel)]="query" placeholder="artist name">
+  <button type="submit" [disabled]="!valid8or()">Query</button>
+
+</form>

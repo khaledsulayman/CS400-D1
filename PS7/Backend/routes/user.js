@@ -27,7 +27,7 @@ const router = require('express').Router(),
 
 
 router.get('/', function(req, res) {
-    res.render('in')
+    res.json('in', )
 });
 
 
@@ -94,7 +94,7 @@ router.get('/:query', function(req, res) {
                             //
                             // const artist = JSON.parse(body);
                             console.log(artist);
-                            res.render('result', {artist});
+                            res.json('result', {artist});
                         })
 
                     // res.render('result', {object: artist} )
