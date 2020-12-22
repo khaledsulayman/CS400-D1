@@ -1,0 +1,10 @@
+<div *ngIf="artist.name.length">
+  <h2>If you're a fan of {{ artist.name }},</h2>
+  <h3>You may want to check out some other artists like:</h3>
+
+  <ul>
+    <li *ngFor="let rel of artist.related">{{rel.name}} </li>
+  </ul>
+
+  <p>{{artist.fromDB}}</p>
+</div>
